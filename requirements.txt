@@ -4,3 +4,4 @@ Flask-WTF
 SQLAlchemy
 WTForms
 pandas
+gunicorn
