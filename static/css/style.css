@@ -1,0 +1,624 @@
+/* Import Google Fonts - Poppins for body, Playfair Display for headings for a fresh professional look */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* --- Root Variables for Colors and Spacing (Dairy Theme) --- */
+:root {
+    /* Colors */
+    --background-light: #FDFBF7; /* Creamy white */
+    --background-muted: #EBF4F5; /* Very light blue-green for subtle sections */
+    --text-dark: #333333; /* Dark gray for general text */
+    --text-medium: #666666; /* Medium gray for secondary text */
+    --accent-green: #4CAF50; /* Soft green */
+    --accent-blue: #2196F3; /* Sky blue */
+    --accent-orange: #FF9800; /* Soft orange for highlights/warnings */
+
+    --gradient-button-start: #4CAF50; /* Green */
+    --gradient-button-end: #81C784; /* Lighter green */
+    --button-primary-bg: linear-gradient(90deg, var(--gradient-button-start) 0%, var(--gradient-button-end) 100%);
+    --button-primary-hover: linear-gradient(90deg, #388E3C 0%, #66BB6A 100%);
+    --button-secondary-bg: transparent;
+    --button-secondary-border: 1px solid var(--accent-blue);
+    --button-secondary-text: var(--accent-blue);
+
+    --card-bg: #FFFFFF; /* White for cards/forms/tables on light background */
+    --border-light: #DDDDDD; /* Light gray border for elements */
+    --table-header-bg: #F5F5F5; /* Light gray for table headers */
+
+    /* Typography */
+    --font-heading: 'Playfair Display', serif; /* Elegant heading font */
+    --font-body: 'Poppins', sans-serif; /* Modern, readable body font */
+
+    /* Spacing */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 48px;
+    --spacing-xl: 96px;
+}
+
+/* --- Base Body & General Styles --- */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+a {
+    color: var(--accent-blue); /* Default link color */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-green); /* Link hover color */
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    color: var(--text-dark); /* Headings are dark */
+    margin-top: 0;
+}
+
+p {
+    color: var(--text-medium); /* Paragraph text is medium gray */
+}
+
+/* --- Header & Unified Navigation --- */
+header {
+    background-color: var(--card-bg); /* White header background */
+    padding: var(--spacing-md) 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for header */
+    position: relative;
+    z-index: 100;
+}
+
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--accent-green); /* Dairy theme logo color */
+    letter-spacing: 1px;
+    white-space: nowrap; /* Prevent breaking on small screens */
+}
+
+nav {
+    flex-grow: 1; /* Allow nav to take available space */
+    display: flex;
+    justify-content: flex-end; /* Push nav content to the right */
+    align-items: center;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: center; /* Align items vertically */
+}
+
+nav ul li {
+    margin: 0 var(--spacing-sm);
+}
+
+nav ul li a {
+    font-weight: 500;
+    padding: 8px 12px; /* Make nav links clickable area larger */
+    border-radius: 5px; /* Subtle rounded corners */
+    color: var(--text-dark); /* Nav link text color */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: var(--background-muted); /* Light background on hover */
+    color: var(--accent-blue); /* Accent color on hover */
+}
+
+/* Auth buttons within Nav (last two list items) */
+nav ul li.auth-item:first-of-type a { /* Sign Up button */
+    background: var(--button-primary-bg);
+    color: #fff;
+    border-radius: 25px;
+    padding: 8px 18px;
+    margin-left: var(--spacing-md); /* Space from regular nav links */
+}
+nav ul li.auth-item:first-of-type a:hover {
+    background: var(--button-primary-hover);
+    color: #fff;
+}
+
+nav ul li.auth-item:last-of-type a { /* Login button */
+    background: none;
+    border: 1px solid var(--button-secondary-border);
+    color: var(--button-secondary-text);
+    border-radius: 25px;
+    padding: 8px 18px;
+}
+nav ul li.auth-item:last-of-type a:hover {
+    background-color: rgba(var(--accent-blue), 0.1);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+}
+
+
+/* --- Main Buttons (e.g., Get Started, Watch Demo) --- */
+.button {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.primary-button {
+    background: var(--button-primary-bg);
+    border: none;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.primary-button:hover {
+    background: var(--button-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.secondary-button {
+    background: var(--button-secondary-bg);
+    border: var(--button-secondary-border);
+    color: var(--button-secondary-text);
+}
+
+.secondary-button:hover {
+    background-color: rgba(var(--accent-blue), 0.1);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+}
+
+/* --- Hero Section (Landing Page Specific) --- */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-xl) 0;
+    min-height: 70vh;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--background-light); /* Ensure light background for hero */
+}
+
+/* No strong background gradient for a cleaner look,
+   but can add subtle textures if desired. */
+
+.hero-text {
+    flex: 1;
+    max-width: 550px;
+    text-align: left;
+}
+
+.hero-text .tagline {
+    font-size: 1em;
+    color: var(--accent-green); /* Fresh green tagline */
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    letter-spacing: 0.5px;
+}
+
+.hero-text h1 {
+    font-size: 3.8em;
+    line-height: 1.1;
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.hero-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+/* Dashboard Preview (Right Side) */
+.dashboard-preview {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: var(--spacing-lg);
+}
+
+.dashboard-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Lighter shadow for light theme */
+    transform: rotate3d(1, 1, 0, 5deg); /* Subtle 3D tilt */
+    transition: transform 0.3s ease;
+}
+
+.dashboard-preview img:hover {
+    transform: rotate3d(1, 1, 0, 0deg);
+}
+
+/* --- Trust Section --- */
+.trust-section {
+    background-color: var(--background-muted); /* Light blue-green background */
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    margin-top: var(--spacing-xl);
+}
+
+.trust-section h2 {
+    font-size: 2em;
+    margin-bottom: var(--spacing-lg);
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.logo-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.logo-grid img {
+    height: 45px; /* Slightly larger logos */
+    filter: grayscale(100%); /* Keeps them black/white */
+    opacity: 0.6;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.logo-grid img:hover {
+    filter: grayscale(0%); /* Full color on hover */
+    opacity: 1;
+}
+
+.trust-statement {
+    font-size: 1.1em;
+    color: var(--text-medium);
+}
+
+/* --- Description Section --- */
+.description-section {
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.description-section p {
+    font-size: 1.3em;
+    line-height: 1.8;
+    color: var(--text-dark); /* Important text stands out */
+}
+
+/* --- Main Content Area for Accounting Views (within index.html) --- */
+.app-view-container {
+    padding: var(--spacing-xl) 0; /* Ample padding for internal app sections */
+    background-color: var(--background-light); /* Maintain light background */
+    border-top: 1px solid var(--border-light); /* Visual separation */
+}
+
+.app-section-title {
+    color: var(--accent-blue); /* Headline for accounting sections */
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 10px;
+    margin-bottom: var(--spacing-lg);
+    font-size: 2.2em;
+    text-align: center;
+}
+
+/* --- Form Styles (adapted for light theme) --- */
+.app-form-wrapper {
+    background-color: var(--card-bg); /* White background for form areas */
+    padding: var(--spacing-lg);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+    max-width: 600px;
+    margin: var(--spacing-md) auto;
+    border: 1px solid var(--border-light);
+}
+
+.app-form-wrapper form p {
+    margin-bottom: 15px;
+}
+
+.app-form-wrapper form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-dark); /* Labels are dark */
+}
+
+.app-form-wrapper form input[type="text"],
+.app-form-wrapper form input[type="number"],
+.app-form-wrapper form input[type="date"],
+.app-form-wrapper form select,
+.app-form-wrapper form textarea {
+    width: calc(100% - 22px);
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #F8F8F8; /* Very subtle light gray background for inputs */
+    color: var(--text-dark); /* Input text color */
+    box-sizing: border-box;
+}
+
+/* Placeholder color for light inputs */
+.app-form-wrapper form input::placeholder,
+.app-form-wrapper form textarea::placeholder {
+    color: var(--text-medium);
+    opacity: 0.7;
+}
+
+
+/* Form submit buttons should use primary button style */
+.app-form-wrapper form input[type="submit"] {
+    background: var(--button-primary-bg);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: auto;
+}
+
+.app-form-wrapper form input[type="submit"]:hover {
+    background: var(--button-primary-hover);
+    transform: translateY(-2px);
+}
+
+.app-form-wrapper .error {
+    color: var(--accent-orange); /* Use accent orange for errors */
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: block;
+}
+
+/* --- Table Styles (adapted for light theme) --- */
+.app-table-wrapper {
+    background-color: var(--card-bg); /* White background for table areas */
+    padding: var(--spacing-lg);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: var(--spacing-md) auto;
+    overflow-x: auto;
+    border: 1px solid var(--border-light);
+}
+
+.app-table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--text-dark); /* Table text color */
+}
+
+.app-table-wrapper table th,
+.app-table-wrapper table td {
+    border: 1px solid var(--border-light);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.app-table-wrapper table th {
+    background-color: var(--table-header-bg); /* Light gray for table headers */
+    font-weight: 600;
+    color: var(--accent-blue); /* Header text color */
+}
+
+.app-table-wrapper table tbody tr:nth-child(even) {
+    background-color: #FBFBFB; /* Very subtle zebra striping */
+}
+
+.app-table-wrapper table tbody tr:hover {
+    background-color: var(--background-muted); /* Light blue-green hover effect */
+}
+
+/* --- Report Specific Styles (adapted for light theme) --- */
+.report-section {
+    background-color: var(--card-bg); /* White background */
+    padding: var(--spacing-lg);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: var(--spacing-md) auto;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border-light);
+}
+
+.report-section h3, .report-section h4 {
+    color: var(--accent-blue); /* Use accent color for report titles */
+    border-bottom: 1px dashed var(--border-light);
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+}
+
+.report-section p {
+    color: var(--text-dark); /* Ensure report text is readable */
+}
+
+.report-section p strong {
+    color: var(--accent-green); /* Highlight strong text */
+}
+
+.total-line {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--accent-green); /* Use accent green for totals */
+    margin-top: var(--spacing-sm);
+}
+
+.balance-check {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: rgba(var(--accent-blue), 0.1); /* Light blue background */
+    border: 1px solid var(--accent-blue);
+    border-radius: 8px;
+    color: var(--text-dark);
+    font-weight: bold;
+    text-align: center;
+}
+
+/* --- Flash Message Styles (adapted for light theme) --- */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-md) 0 var(--spacing-lg);
+    text-align: center;
+}
+
+.flashes li {
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
+    border-radius: 8px;
+    color: #fff; /* White text for flash messages */
+    font-weight: 500;
+    display: inline-block;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.flashes .success {
+    background-color: #4CAF50; /* Green */
+}
+
+.flashes .error {
+    background-color: #F44336; /* Red */
+}
+
+.flashes .info {
+    background-color: #2196F3; /* Blue */
+}
+
+/* --- Footer --- */
+footer {
+    background-color: #2196F3; /* Sky blue footer */
+    color: #fff; /* White text for footer */
+    padding: var(--spacing-md) 0;
+    text-align: center;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding: var(--spacing-lg) 0;
+    }
+
+    .hero-text {
+        max-width: 100%;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .hero-text h1 {
+        font-size: 3em;
+    }
+
+    .dashboard-preview {
+        padding-left: 0;
+        margin-top: var(--spacing-lg);
+        
+        
+    }
+
+    .dashboard-preview img {
+        max-width: 80%;
+    }
+
+    .trust-section h2 {
+        font-size: 1.8em;
+    }
+
+    .logo-grid {
+        gap: var(--spacing-md);
+    }
+
+    .description-section {
+        padding: var(--spacing-lg) 0;
+    }
+
+    .description-section p {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-wrapper {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    nav {
+        justify-content: center; /* Center nav items when stacked */
+    }
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    nav ul li {
+        margin: 0 10px;
+        margin-bottom: 5px; /* Space between wrapped items */
+    }
+    nav ul li.auth-item:first-of-type a {
+        margin-left: 0; /* Remove extra margin on smaller screens */
+    }
+
+    .hero-text h1 {
+        font-size: 2.5em;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .trust-section h2 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 2em;
+    }
+    .logo-grid img {
+        height: 30px;
+    }
+}
