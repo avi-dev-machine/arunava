@@ -1,0 +1,290 @@
+//while saving save as index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মাতৃ Dairies - Management Simplified</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container nav-wrapper">
+            <div class="logo">মাতৃ Dairies</div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    {# Dairy-specific navigation links #}
+                    <li><a href="{{ url_for('add_dairy_entry') }}">Add Entry</a></li>
+                    <li><a href="{{ url_for('dairy_entries') }}">View Entries</a></li>
+                    <li><a href="{{ url_for('dairy_daily_summary') }}">Daily Summary</a></li>
+                    {# Only the "View Data" button remains in the header #}
+                    <li class="auth-item"><a href="{{ url_for('dairy_entries') }}" class="button login-button">View Data</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {# --- Conditional Content Display for ALL Views --- #}
+
+        {% if current_view == 'home' %}
+            <section class="hero-section container">
+                <div class="hero-text">
+                    <div class="tagline">Fresh Insights for Your Dairy Business!</div>
+                    <h1>Streamline Your Dairy Management with মাতৃ Dairies</h1>
+                    <div class="hero-buttons">
+                        <a href="{{ url_for('add_dairy_entry') }}" class="button primary-button">Get Started Now</a>
+                        <a href="#" class="button secondary-button">Watch Demo</a> {# Placeholder for demo video/page #}
+                    </div>
+                </div>
+                <div class="dashboard-preview">
+                    {# IMPORTANT: Ensure 'image.jpg' is in your 'static/images/' folder #}
+                    <img src="{{ url_for('static', filename='images/image.png') }}" alt="Dairy Management System Preview">
+                </div>
+            </section>
+
+            <section class="trust-section">
+                <div class="container">
+                    <h2>Trusted by Leading Dairy Producers & Shops</h2>
+                    <div class="logo-grid">
+                        {# IMPORTANT: Place your actual logo images in your 'static/images/' folder #}
+                        <img src="{{ url_for('static', filename='images/dairy_farm_logo1.svg') }}" alt="Dairy Farm Logo 1">
+                        <img src="{{ url_for('static', filename='images/milk_shop_logo.svg') }}" alt="Milk Shop Logo">
+                        <img src="{{ url_for('static', filename='images/food_distributor_logo.svg') }}" alt="Food Distributor Logo">
+                        <img src="{{ url_for('static', filename='images/local_creamery_logo.svg') }}" alt="Local Creamery Logo">
+                        <img src="{{ url_for('static', filename='images/cheese_producer_logo.svg') }}" alt="Cheese Producer Logo">
+                        <img src="{{ url_for('static', filename='images/yogurt_brand_logo.svg') }}" alt="Yogurt Brand Logo">
+                    </div>
+                    <p class="trust-statement">Simplifying financial management for dairy businesses of all sizes.</p>
+                </div>
+            </section>
+
+            <section class="description-section container">
+                <p>From tracking milk production costs to managing sales of dairy products, our intuitive accounting tools empower you to make informed decisions. Spend less time on paperwork and more time delivering quality dairy.</p>
+            </section>
+
+        {% elif current_view == 'add_dairy_entry' %}
+            <section class="app-view-container container">
+                <h2 class="app-section-title">Add New Dairy Entry</h2>
+                <div class="app-form-wrapper">
+                    <form method="POST" action="{{ url_for('add_dairy_entry') }}">
+                        {{ form.hidden_tag() }}
+                        <p>
+                            {{ form.date.label }}<br>
+                            {{ form.date(size=20) }}
+                            {% for error in form.date.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.m_name.label }}<br>
+                            {{ form.m_name(size=40) }}
+                            {% for error in form.m_name.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {# Item Name dropdown #}
+                            {{ form.item.label }}<br>
+                            {{ form.item() }} {# WTForms renders the <select> tag #}
+                            {% for error in form.item.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.weight.label }}<br>
+                            {{ form.weight(size=20) }}
+                            {% for error in form.weight.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.unit.label }}<br>
+                            {{ form.unit(size=20) }}
+                            {% for error in form.unit.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.price_per_unit.label }}<br>
+                            {# Corrected: Render the WTForms price_per_unit field as readonly #}
+                            {{ form.price_per_unit(size=20, readonly='readonly') }}
+                            {% for error in form.price_per_unit.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.paid.label }}<br>
+                            {{ form.paid(size=20) }}
+                            {% for error in form.paid.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>{{ form.submit() }}</p>
+                    </form>
+                </div>
+                
+                {# JavaScript for autofill #}
+                <script>
+    // Pass the Python DAIRY_PRODUCTS dictionary to JavaScript safely
+    var dairyProductsPrices = {{ dairy_products | tojson }};
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var itemSelect = document.getElementById('item'); // ID for the SelectField
+        var pricePerUnitInput = document.getElementById('price_per_unit'); // ID for the price_per_unit input
+        var weightInput = document.getElementById('weight'); // ID for the weight input
+        var unitInput = document.getElementById('unit'); // ID for the unit input
+        
+        if (itemSelect && pricePerUnitInput && weightInput && unitInput) {
+            itemSelect.addEventListener('change', function() {
+                var selectedItem = this.value;
+                
+                if (selectedItem === 'Miscellaneous') {
+                    // Clear all fields for miscellaneous
+                    pricePerUnitInput.value = '';
+                    weightInput.value = '';
+                    unitInput.value = '';
+                    
+                    // Disable fields for miscellaneous (optional - makes it clear they're not needed)
+                    pricePerUnitInput.disabled = true;
+                    weightInput.disabled = true;
+                    unitInput.disabled = true;
+                    
+                    // Add visual styling to show disabled state (optional)
+                    pricePerUnitInput.style.backgroundColor = '#f5f5f5';
+                    weightInput.style.backgroundColor = '#f5f5f5';
+                    unitInput.style.backgroundColor = '#f5f5f5';
+                    
+                } else {
+                    // Re-enable fields for regular items
+                    pricePerUnitInput.disabled = false;
+                    weightInput.disabled = false;
+                    unitInput.disabled = false;
+                    
+                    // Remove visual styling
+                    pricePerUnitInput.style.backgroundColor = '';
+                    weightInput.style.backgroundColor = '';
+                    unitInput.style.backgroundColor = '';
+                    
+                    // Auto-fill price if available (your original logic)
+                    if (selectedItem && dairyProductsPrices[selectedItem] !== undefined && dairyProductsPrices[selectedItem] !== null) {
+                        var price = parseFloat(dairyProductsPrices[selectedItem]).toFixed(2);
+                        pricePerUnitInput.value = price;
+                    } else {
+                        pricePerUnitInput.value = ''; // Clear if no item selected or not found
+                    }
+                }
+            });
+            
+            // Optional: Trigger change on load if an item is already selected (e.g., on validation error)
+            if (itemSelect.value) {
+                itemSelect.dispatchEvent(new Event('change'));
+            }
+        }
+    });
+</script>
+            </section>
+        {% elif current_view == 'dairy_entries' %}
+            <section class="app-view-container container">
+    <h2 class="app-section-title">All Dairy Entries</h2>
+    <div style="margin-bottom: 1em;">
+        <a href="{{ url_for('clear_dues') }}" class="button secondary-button">Clear Dues</a>
+    </div>
+    <div class="app-table-wrapper">
+        {% if entries %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Merchant Name</th>
+                        <th>Item</th>
+                        <th>Weight</th>
+                        <th>Unit</th>
+                        <th>Price/Unit</th>
+                        <th>Cost</th>
+                        <th>Paid</th>
+                        <th>Due</th>
+                        <th>Recorded At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                        <tr>
+                            <td>{{ entry.date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ entry.m_name }}</td>
+                            <td>{{ entry.item }}</td>
+                            <td>₹{{ "{:,.2f}".format(entry.weight) }}</td>
+                            <td>{{ entry.unit }}</td>
+                            <td>₹{{ "{:,.2f}".format(entry.price_per_unit) }}</td>
+                            <td>₹{{ "{:,.2f}".format(entry.cost) }}</td>
+                            <td>₹{{ "{:,.2f}".format(entry.paid) }}</td>
+                            <td>₹{{ "{:,.2f}".format(entry.due) }}</td>
+                            <td>{{ entry.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No Dairy entries recorded yet. <a href="{{ url_for('add_dairy_entry') }}">Add your first Dairy entry!</a></p>
+        {% endif %}
+    </div>
+</section>
+        {% elif current_view == 'dairy_daily_summary' %}
+            <section class="app-view-container container">
+                <h2 class="app-section-title">Dairy Daily Summary Report</h2>
+                <div class="app-form-wrapper">
+                    <form method="POST" action="{{ url_for('dairy_daily_summary') }}">
+                        {{ form.hidden_tag() }}
+                        <p>
+                            {{ form.report_date.label }}<br>
+                            {{ form.report_date(size=20) }}
+                            {% for error in form.report_date.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.total_cash_income.label }}<br>
+                            {{ form.total_cash_income(size=20) }}
+                            {% for error in form.total_cash_income.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                        <p>{{ form.submit() }}</p>
+                    </form>
+                </div>
+                {% if report_data %}
+                    <div class="report-section">
+                        <h3>Summary for {{ report_data.date }}</h3>
+                        <h4>Dairy Specifics</h4>
+                        <p>Total Cost of Goods (Dairy): ₹{{ "{:,.2f}".format(report_data.total_cost_dairy) }}</p>
+                        <p>Total Paid by Customers (Dairy Entries): ₹{{ "{:,.2f}".format(report_data.total_paid_dairy) }}</p>
+                        <p><strong>Total Outstanding Dues (End of Day): ₹{{ "{:,.2f}".format(report_data.total_dues_today) }}</strong></p>
+                    </div>
+                    <div class="report-section total-line">
+                        <h4>Overall Daily Profit/Loss</h4>
+                        <p>Provided Total Cash Income for the Day: ₹{{ "{:,.2f}".format(report_data.total_cash_income) }}</p>
+                        <p><strong>Net Profit/Loss (Income - Dairy Cost): ₹{{ "{:,.2f}".format(report_data.profit_loss) }}</strong></p>
+                    </div>
+                {% endif %}
+            </section>
+        {% endif %} {# End of main current_view if-else block #}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ now().year }} মাতৃ Dairies. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
