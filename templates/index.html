@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মাতৃ Dairies - Management Simplified</title>
+    <title>মাতৃ Sweets - Management Simplified</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header>
         <div class="container nav-wrapper">
-            <div class="logo">মাতৃ Dairies</div>
+            <div class="logo">মাতৃ Sweets</div>
             <nav>
                 <ul>
                     <li><a href="{{ url_for('index') }}">Home</a></li>
@@ -18,7 +18,7 @@
                     <li><a href="{{ url_for('dairy_entries') }}">View Entries</a></li>
                     <li><a href="{{ url_for('dairy_daily_summary') }}">Daily Summary</a></li>
                     {# Only the "View Data" button remains in the header #}
-                    <li class="auth-item"><a href="{{ url_for('dairy_entries') }}" class="button login-button">View Data</a></li>
+                    
                 </ul>
             </nav>
         </div>
@@ -40,39 +40,20 @@
         {% if current_view == 'home' %}
             <section class="hero-section container">
                 <div class="hero-text">
-                    <div class="tagline">Fresh Insights for Your Dairy Business!</div>
-                    <h1>Streamline Your Dairy Management with মাতৃ Dairies</h1>
-                    <div class="hero-buttons">
-                        <a href="{{ url_for('add_dairy_entry') }}" class="button primary-button">Get Started Now</a>
-                        <a href="#" class="button secondary-button">Watch Demo</a> {# Placeholder for demo video/page #}
+                    <div class="tagline"></div>
+                    <h1>মিষ্টির স্বাদে ঐতিহ্যের টান-মাতৃ Sweets</h1>
+                    <!-- <div class="hero-buttons">
+                        <a href="{{ url_for('add_dairy_entry') }}" class="button primary-button"></a>
+                        -->
                     </div>
                 </div>
                 <div class="dashboard-preview">
                     {# IMPORTANT: Ensure 'image.jpg' is in your 'static/images/' folder #}
-                    <img src="{{ url_for('static', filename='images/image.png') }}" alt="Dairy Management System Preview">
+                    <!-- <img src="{{ url_for('static', filename='images/image.png') }}" alt="Dairy Management System Preview"> -->
                 </div>
             </section>
 
-            <section class="trust-section">
-                <div class="container">
-                    <h2>Trusted by Leading Dairy Producers & Shops</h2>
-                    <div class="logo-grid">
-                        {# IMPORTANT: Place your actual logo images in your 'static/images/' folder #}
-                        <img src="{{ url_for('static', filename='images/dairy_farm_logo1.svg') }}" alt="Dairy Farm Logo 1">
-                        <img src="{{ url_for('static', filename='images/milk_shop_logo.svg') }}" alt="Milk Shop Logo">
-                        <img src="{{ url_for('static', filename='images/food_distributor_logo.svg') }}" alt="Food Distributor Logo">
-                        <img src="{{ url_for('static', filename='images/local_creamery_logo.svg') }}" alt="Local Creamery Logo">
-                        <img src="{{ url_for('static', filename='images/cheese_producer_logo.svg') }}" alt="Cheese Producer Logo">
-                        <img src="{{ url_for('static', filename='images/yogurt_brand_logo.svg') }}" alt="Yogurt Brand Logo">
-                    </div>
-                    <p class="trust-statement">Simplifying financial management for dairy businesses of all sizes.</p>
-                </div>
-            </section>
-
-            <section class="description-section container">
-                <p>From tracking milk production costs to managing sales of dairy products, our intuitive accounting tools empower you to make informed decisions. Spend less time on paperwork and more time delivering quality dairy.</p>
-            </section>
-
+            
         {% elif current_view == 'add_dairy_entry' %}
             <section class="app-view-container container">
                 <h2 class="app-section-title">Add New Dairy Entry</h2>
@@ -136,31 +117,63 @@
                 
                 {# JavaScript for autofill #}
                 <script>
-                    // Pass the Python DAIRY_PRODUCTS dictionary to JavaScript safely
-                    var dairyProductsPrices = {{ dairy_products | tojson }};
-
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var itemSelect = document.getElementById('item'); // ID for the SelectField
-                        var pricePerUnitInput = document.getElementById('price_per_unit'); // ID for the price_per_unit input
-
-                        if (itemSelect && pricePerUnitInput) {
-                            itemSelect.addEventListener('change', function() {
-                                var selectedItem = this.value;
-                                if (selectedItem && dairyProductsPrices[selectedItem] !== undefined) {
-                                    var price = parseFloat(dairyProductsPrices[selectedItem]).toFixed(2);
-                                    pricePerUnitInput.value = price;
-                                } else {
-                                    pricePerUnitInput.value = ''; // Clear if no item selected or not found
-                                }
-                            });
-
-                            // Optional: Trigger change on load if an item is already selected (e.g., on validation error)
-                            if (itemSelect.value) {
-                                itemSelect.dispatchEvent(new Event('change'));
-                            }
-                        }
-                    });
-                </script>
+    // Pass the Python DAIRY_PRODUCTS dictionary to JavaScript safely
+    var dairyProductsPrices = {{ dairy_products | tojson }};
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var itemSelect = document.getElementById('item'); // ID for the SelectField
+        var pricePerUnitInput = document.getElementById('price_per_unit'); // ID for the price_per_unit input
+        var weightInput = document.getElementById('weight'); // ID for the weight input
+        var unitInput = document.getElementById('unit'); // ID for the unit input
+        
+        if (itemSelect && pricePerUnitInput && weightInput && unitInput) {
+            itemSelect.addEventListener('change', function() {
+                var selectedItem = this.value;
+                
+                if (selectedItem === 'Miscellaneous') {
+                    // Clear all fields for miscellaneous
+                    pricePerUnitInput.value = '';
+                    weightInput.value = '';
+                    unitInput.value = '';
+                    
+                    // Disable fields for miscellaneous (optional - makes it clear they're not needed)
+                    pricePerUnitInput.disabled = true;
+                    weightInput.disabled = true;
+                    unitInput.disabled = true;
+                    
+                    // Add visual styling to show disabled state (optional)
+                    pricePerUnitInput.style.backgroundColor = '#f5f5f5';
+                    weightInput.style.backgroundColor = '#f5f5f5';
+                    unitInput.style.backgroundColor = '#f5f5f5';
+                    
+                } else {
+                    // Re-enable fields for regular items
+                    pricePerUnitInput.disabled = false;
+                    weightInput.disabled = false;
+                    unitInput.disabled = false;
+                    
+                    // Remove visual styling
+                    pricePerUnitInput.style.backgroundColor = '';
+                    weightInput.style.backgroundColor = '';
+                    unitInput.style.backgroundColor = '';
+                    
+                    // Auto-fill price if available (your original logic)
+                    if (selectedItem && dairyProductsPrices[selectedItem] !== undefined && dairyProductsPrices[selectedItem] !== null) {
+                        var price = parseFloat(dairyProductsPrices[selectedItem]).toFixed(2);
+                        pricePerUnitInput.value = price;
+                    } else {
+                        pricePerUnitInput.value = ''; // Clear if no item selected or not found
+                    }
+                }
+            });
+            
+            // Optional: Trigger change on load if an item is already selected (e.g., on validation error)
+            if (itemSelect.value) {
+                itemSelect.dispatchEvent(new Event('change'));
+            }
+        }
+    });
+</script>
             </section>
         {% elif current_view == 'dairy_entries' %}
             <section class="app-view-container container">
@@ -191,12 +204,12 @@
                             <td>{{ entry.date.strftime('%Y-%m-%d') }}</td>
                             <td>{{ entry.m_name }}</td>
                             <td>{{ entry.item }}</td>
-                            <td>₹{{ "{:,.2f}".format(entry.weight) }}</td>
-                            <td>{{ entry.unit }}</td>
-                            <td>₹{{ "{:,.2f}".format(entry.price_per_unit) }}</td>
-                            <td>₹{{ "{:,.2f}".format(entry.cost) }}</td>
-                            <td>₹{{ "{:,.2f}".format(entry.paid) }}</td>
-                            <td>₹{{ "{:,.2f}".format(entry.due) }}</td>
+                            <td>{{ "{:,.2f}".format(entry.weight) if entry.weight is not none else '-' }}</td>
+                            <td>{{ entry.unit if entry.unit else '-' }}</td>
+                            <td>{{ '₹{:,.2f}'.format(entry.price_per_unit) if entry.price_per_unit is not none else '-' }}</td>
+                            <td>{{ '₹{:,.2f}'.format(entry.cost) if entry.cost is not none else '-' }}</td>
+                            <td>{{ '₹{:,.2f}'.format(entry.paid) if entry.paid is not none else '-' }}</td>
+                            <td>{{ '₹{:,.2f}'.format(entry.due) if entry.due is not none else '-' }}</td>
                             <td>{{ entry.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         </tr>
                     {% endfor %}
