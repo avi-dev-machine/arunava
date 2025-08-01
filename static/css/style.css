@@ -1,5 +1,6 @@
 /* Import Google Fonts - Poppins for body, Playfair Display for headings for a fresh professional look */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Galada&display=swap');
 
 /* --- Root Variables for Colors and Spacing (Dairy Theme) --- */
 :root {
@@ -27,6 +28,7 @@
     /* Typography */
     --font-heading: 'Playfair Display', serif; /* Elegant heading font */
     --font-body: 'Poppins', sans-serif; /* Modern, readable body font */
+    --font-bengali: 'Galada', cursive;;
 
     /* Spacing */
     --spacing-xs: 8px;
@@ -40,12 +42,28 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--background-light);
-    color: var(--text-dark);
-    font-family: var(--font-body);
+    background: url('/static/images/bg.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    font-family: 'Galada', cursive;
     line-height: 1.6;
     overflow-x: hidden;
 }
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* dim effect: 0.5 = 50% dark */
+  z-index: 0;
+  pointer-events: none; /* So clicks go through */
+}
+
+/* Ensure all content is above the overlay */
+body * {
+  position: relative;
+  z-index: 1;
+
 
 .container {
     max-width: 1200px;
@@ -54,23 +72,27 @@ body {
 }
 
 a {
-    color: var(--accent-blue); /* Default link color */
+    color: white; /* Default link color */
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 a:hover {
-    color: var(--accent-green); /* Link hover color */
+    color: rgb(17, 17, 17); /* Link hover color */
 }
 
 h1, h2, h3, h4 {
-    font-family: var(--font-heading);
-    color: var(--text-dark); /* Headings are dark */
+    font-family: var(--font-bengali);
+    color: white; /* Headings are dark */
     margin-top: 0;
 }
 
 p {
     color: var(--text-medium); /* Paragraph text is medium gray */
+}
+
+ul {
+    font-size: 1.2em; /* Increase font size for all unordered lists */
 }
 
 /* --- Header & Unified Navigation --- */
@@ -86,15 +108,23 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #00000000;      /* Solid black */
+    color: #fff;                 /* Optional: white text for contrast */
+    width: 100vw;                /* Full viewport width */
+    padding: 1rem 2rem;          /* Optional: inner spacing */
+    box-sizing: border-box;     /* Ensures padding doesn't break layout */
+    position: relative;          /* Needed if you layer other elements */
 }
 
+
+
 .logo {
-    font-family: var(--font-heading);
-    font-size: 1.8em;
+    font-family: var(--font-bengali);
+    font-size: 4.8em;
     font-weight: 700;
-    color: var(--accent-green); /* Dairy theme logo color */
-    letter-spacing: 1px;
-    white-space: nowrap; /* Prevent breaking on small screens */
+     color: #f8d35f; /* soft golden */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    font-weight: bold;
 }
 
 nav {
@@ -120,13 +150,13 @@ nav ul li a {
     font-weight: 500;
     padding: 8px 12px; /* Make nav links clickable area larger */
     border-radius: 5px; /* Subtle rounded corners */
-    color: var(--text-dark); /* Nav link text color */
+    color: white;/* Nav link text color */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 nav ul li a:hover {
-    background-color: var(--background-muted); /* Light background on hover */
-    color: var(--accent-blue); /* Accent color on hover */
+    background-color: rgba(0, 0, 0, 0.158); /* Light background on hover */
+    color: white; /* Accent color on hover */
 }
 
 /* Auth buttons within Nav (last two list items) */
@@ -183,16 +213,17 @@ nav ul li.auth-item:last-of-type a:hover {
 }
 
 .secondary-button {
-    background: var(--button-secondary-bg);
-    border: var(--button-secondary-border);
-    color: var(--button-secondary-text);
+    background: red;
+    border: 2px solid rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
 }
 
 .secondary-button:hover {
-    background-color: rgba(var(--accent-blue), 0.1);
-    border-color: var(--accent-green);
-    color: var(--accent-green);
+    background-color: darkred;
+    border-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
 }
+
 
 /* --- Hero Section (Landing Page Specific) --- */
 .hero-section {
@@ -203,7 +234,7 @@ nav ul li.auth-item:last-of-type a:hover {
     min-height: 70vh;
     position: relative;
     overflow: hidden;
-    background-color: var(--background-light); /* Ensure light background for hero */
+    background-color: transparent; /* Make hero section fully transparent */
 }
 
 /* No strong background gradient for a cleaner look,
@@ -224,18 +255,17 @@ nav ul li.auth-item:last-of-type a:hover {
 }
 
 .hero-text h1 {
-    font-size: 3.8em;
+    font-size: 6.8em;
     line-height: 1.1;
     margin-bottom: var(--spacing-md);
     font-weight: 700;
-    color: var(--text-dark);
-}
+    color: white;}
 
-.hero-buttons {
+/* .hero-buttons {
     display: flex;
     gap: var(--spacing-md);
     margin-top: var(--spacing-md);
-}
+} */
 
 /* Dashboard Preview (Right Side) */
 .dashboard-preview {
@@ -244,19 +274,19 @@ nav ul li.auth-item:last-of-type a:hover {
     justify-content: center;
     align-items: center;
     padding-left: var(--spacing-lg);
+    box-shadow: none;      /* Remove any box shadow */
+    border: none;          /* Remove any border */
+    background: transparent; /* Ensure background is transparent */
 }
 
 .dashboard-preview img {
     max-width: 100%;
+    width: 600px;      /* Increase image width */
     height: auto;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Lighter shadow for light theme */
-    transform: rotate3d(1, 1, 0, 5deg); /* Subtle 3D tilt */
-    transition: transform 0.3s ease;
-}
-
-.dashboard-preview img:hover {
-    transform: rotate3d(1, 1, 0, 0deg);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+    transition: none;
 }
 
 /* --- Trust Section --- */
@@ -286,9 +316,9 @@ nav ul li.auth-item:last-of-type a:hover {
 
 .logo-grid img {
     height: 45px; /* Slightly larger logos */
-    filter: grayscale(100%); /* Keeps them black/white */
-    opacity: 0.6;
-    transition: filter 0.3s ease, opacity 0.3s ease;
+    filter: none; /* Remove any grayscale filter */
+    -webkit-filter: none;
+    transition: none;
 }
 
 .logo-grid img:hover {
@@ -299,6 +329,7 @@ nav ul li.auth-item:last-of-type a:hover {
 .trust-statement {
     font-size: 1.1em;
     color: var(--text-medium);
+    
 }
 
 /* --- Description Section --- */
@@ -318,12 +349,13 @@ nav ul li.auth-item:last-of-type a:hover {
 /* --- Main Content Area for Accounting Views (within index.html) --- */
 .app-view-container {
     padding: var(--spacing-xl) 0; /* Ample padding for internal app sections */
-    background-color: var(--background-light); /* Maintain light background */
-    border-top: 1px solid var(--border-light); /* Visual separation */
+    background-color: transparent; /* Make background see-through */
+    border-top: none; /* Remove top border */
 }
 
+
 .app-section-title {
-    color: var(--accent-blue); /* Headline for accounting sections */
+    color: white; /* Headline for accounting sections */
     border-bottom: 2px solid var(--border-light);
     padding-bottom: 10px;
     margin-bottom: var(--spacing-lg);
@@ -379,22 +411,26 @@ nav ul li.auth-item:last-of-type a:hover {
 
 /* Form submit buttons should use primary button style */
 .app-form-wrapper form input[type="submit"] {
-    background: var(--button-primary-bg);
-    color: white;
+   background: linear-gradient(135deg, #f6e27a, #e4b719); /* golden gradient */
+    color: #ffffff;
+    font-family: var(--font-bengali);
     padding: 12px 25px;
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    border-radius: 8px;
+    font-weight: 600;
     font-size: 1.1em;
-    font-weight: bold;
+    cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    width: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .app-form-wrapper form input[type="submit"]:hover {
-    background: var(--button-primary-hover);
+    background: linear-gradient(135deg, #e4c454, #c9a710);
     transform: translateY(-2px);
 }
+
+
+
 
 .app-form-wrapper .error {
     color: var(--accent-orange); /* Use accent orange for errors */
@@ -434,7 +470,7 @@ nav ul li.auth-item:last-of-type a:hover {
 .app-table-wrapper table th {
     background-color: var(--table-header-bg); /* Light gray for table headers */
     font-weight: 600;
-    color: var(--accent-blue); /* Header text color */
+    color: rgb(7, 90, 179); /* Header text color */
 }
 
 .app-table-wrapper table tbody tr:nth-child(even) {
@@ -517,13 +553,13 @@ nav ul li.auth-item:last-of-type a:hover {
 }
 
 .flashes .info {
-    background-color: #2196F3; /* Blue */
+    background-color: #065932; /* Blue */
 }
 
 /* --- Footer --- */
 footer {
-    background-color: #2196F3; /* Sky blue footer */
-    color: #fff; /* White text for footer */
+    background-color: var(--background-light); /* Creamy white footer */
+    color: #333; /* Dark text for contrast */
     padding: var(--spacing-md) 0;
     text-align: center;
     font-size: 0.9em;
@@ -621,4 +657,18 @@ footer {
     .logo-grid img {
         height: 30px;
     }
+}
+
+/* --- Bengali Text Utility Class --- */
+.bengali-text {
+    font-family: var(--font-bengali);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* --- Trust Section - Specific Adjustments --- */
+.trust-section,
+.trust-section h2,
+.trust-section .trust-statement {
+    font-family: 'Galada', cursive !important;
 }
