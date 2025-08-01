@@ -38,7 +38,8 @@ DAIRY_PRODUCTS = {
     "Yogurt (100g)": 25.00,
     "Cream (250ml)": 70.00,
     "Cheese Slice (100g)": 75.00,
-    "Flavored Milk (200ml)": 35.00
+    "Flavored Milk (200ml)": 35.00,
+    "Miscellaneous": None  # Special case - no predefined price
 }
 
 # --- Database Models ---
@@ -48,9 +49,9 @@ class DairyEntry(db.Model):
     date = db.Column(db.Date, nullable=False, default=date.today())
     m_name = db.Column(db.String(100), nullable=False)
     item = db.Column(db.String(100), nullable=False) # This will still store the item name as string
-    weight = db.Column(db.Float, nullable=False)
-    unit = db.Column(db.String(50), nullable=False)
-    price_per_unit = db.Column(db.Float, nullable=False)
+    weight = db.Column(db.Float, nullable=True)  # Make nullable for miscellaneous items
+    unit = db.Column(db.String(50), nullable=True)  # Make nullable for miscellaneous items
+    price_per_unit = db.Column(db.Float, nullable=True)  # Make nullable for miscellaneous items
     cost = db.Column(db.Float, nullable=False)
     paid = db.Column(db.Float, nullable=False)
     due = db.Column(db.Float, nullable=False)
@@ -67,9 +68,9 @@ class AddDairyEntryForm(FlaskForm):
     # Changed 'item' from StringField to SelectField
     item = SelectField('Item Name', validators=[DataRequired()]) 
     
-    weight = FloatField('Weight', validators=[DataRequired(), NumberRange(min=0.01)])
-    unit = StringField('Unit (e.g., kg, pcs)', validators=[DataRequired(), Length(max=50)])
-    price_per_unit = FloatField('Price Per Unit', validators=[DataRequired(), NumberRange(min=0)])
+    weight = FloatField('Weight', validators=[NumberRange(min=0.01)])  # Remove DataRequired for miscellaneous
+    unit = StringField('Unit (e.g., kg, pcs)', validators=[Length(max=50)])  # Remove DataRequired for miscellaneous
+    price_per_unit = FloatField('Price Per Unit', validators=[NumberRange(min=0)])  # Remove DataRequired for miscellaneous
     paid = FloatField('Amount Paid (for this entry)', validators=[DataRequired(), NumberRange(min=0)])
     submit = SubmitField('Add Dairy Entry')
 
@@ -78,6 +79,47 @@ class AddDairyEntryForm(FlaskForm):
         # Populate choices for item field from DAIRY_PRODUCTS
         # Use (value, label) format for choices
         self.item.choices = [('', 'Select an item')] + [(item_name, item_name) for item_name in DAIRY_PRODUCTS.keys()]
+
+    def validate(self, extra_validators=None):
+        # Custom validation for miscellaneous items
+        if self.item.data == 'Miscellaneous':
+            # For miscellaneous items, only validate basic fields
+            is_valid = True
+            
+            # Clear any existing errors for fields we don't need
+            self.weight.errors = []
+            self.unit.errors = []
+            self.price_per_unit.errors = []
+            
+            # Only validate required fields for miscellaneous
+            if not self.date.data:
+                self.date.errors.append('Date is required.')
+                is_valid = False
+            if not self.m_name.data or len(self.m_name.data.strip()) < 2:
+                self.m_name.errors.append('Merchant name is required and must be at least 2 characters.')
+                is_valid = False
+            if not self.paid.data or self.paid.data < 0:
+                self.paid.errors.append('Amount paid is required and must be non-negative.')
+                is_valid = False
+            
+            return is_valid
+        else:
+            # For non-miscellaneous items, run full validation
+            if not super().validate(extra_validators):
+                return False
+            
+            # Additional validation for required fields
+            is_valid = True
+            if not self.weight.data or self.weight.data <= 0:
+                self.weight.errors.append('Weight is required and must be greater than 0.')
+                is_valid = False
+            if not self.unit.data or not self.unit.data.strip():
+                self.unit.errors.append('Unit is required.')
+                is_valid = False
+            if self.price_per_unit.data is None or self.price_per_unit.data < 0:
+                self.price_per_unit.errors.append('Price per unit is required and must be non-negative.')
+                is_valid = False
+            return is_valid
 
 class DairyDailyReportForm(FlaskForm):
     report_date = DateField('Report Date (YYYY-MM-DD)', format='%Y-%m-%d', default=date.today, validators=[DataRequired()])
@@ -109,14 +151,24 @@ def add_dairy_entry():
         entry_date = form.date.data
         m_name = form.m_name.data
         item = form.item.data # This will now be the selected item name from dropdown
-        weight = form.weight.data
-        unit = form.unit.data
-        price_per_unit = form.price_per_unit.data
         paid = form.paid.data
 
-        cost = price_per_unit * weight
-        previous_due = get_previous_dairy_due(entry_date, m_name, item)
-        current_due = (previous_due + cost) - paid
+        if item == 'Miscellaneous':
+            # For miscellaneous items, set default values
+            weight = None
+            unit = None
+            price_per_unit = None
+            cost = paid  # For miscellaneous, cost equals paid amount
+            previous_due = get_previous_dairy_due(entry_date, m_name, item)
+            current_due = previous_due  # No change in due for miscellaneous items
+        else:
+            # For regular items, use form data
+            weight = form.weight.data
+            unit = form.unit.data
+            price_per_unit = form.price_per_unit.data
+            cost = price_per_unit * weight
+            previous_due = get_previous_dairy_due(entry_date, m_name, item)
+            current_due = (previous_due + cost) - paid
 
         new_dairy_entry = DairyEntry(
             date=entry_date,
